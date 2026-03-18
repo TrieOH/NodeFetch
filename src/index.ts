@@ -38,4 +38,4 @@ export {
     defaultToSuccess,
     defaultToFailure,
     defaultOnNetworkError,
-} from "./utils/fetch-utils";
+} from "./utils/fetch";
