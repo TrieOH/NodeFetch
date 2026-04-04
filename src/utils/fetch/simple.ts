@@ -21,6 +21,19 @@ export interface SimpleFetchOptions {
    * Omit to disable timeout.
    */
   timeout?: number;
+
+  /**
+   * Controls whether cookies and other credentials are sent with the request.
+   *
+   * - `"omit"`: Never send credentials.
+   * - `"same-origin"`: Send credentials only for same-origin requests.
+   * - `"include"`: Always send credentials, even for cross-origin requests.
+   *
+   * Defaults to `"include"` in {@link simpleFetch}.
+   *
+   * @see https://developer.mozilla.org/en-US/docs/Web/API/Request/credentials
+   */
+  credentials?: RequestCredentials;
 }
 
 /**
@@ -40,9 +53,9 @@ export interface SimpleFetchOptions {
  */
 export async function simpleFetch<T>(url: string, options?: SimpleFetchOptions): Promise<T> {
   const fetchCall = fetch(url, {
-    method: options?.method,
+    method: options?.method ?? "GET",
     body: options?.body,
-    credentials: "include",
+    credentials: options?.credentials ?? "include",
     headers: {
       "Content-Type": "application/json",
       ...options?.headers,

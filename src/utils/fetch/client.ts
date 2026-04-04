@@ -130,6 +130,14 @@ export interface FetchClientConfig<
    * @param error - The caught exception.
    */
   onNetworkError: (error: unknown) => TFailureEnvelope;
+
+  /**
+   * Default credentials mode applied to every request.
+   * Can be overridden per request via {@link FetchClientOptions.credentials}.
+   *
+   * Defaults to `"include"`.
+   */
+  credentials?: RequestCredentials;
 }
 
 // ─── FetchClientError ─────────────────────────────────────────────────────────
@@ -269,6 +277,7 @@ export function createFetchClient<
     timeout: globalTimeout,
     adapter,
     headers: defaultHeaders = {},
+    credentials: defaultCredentials = "include",
     isSuccess = (_raw: unknown, response: Response) => response.ok,
     toSuccess,
     toFailure,
@@ -303,7 +312,7 @@ export function createFetchClient<
         method: options?.method,
         headers: mergedHeaders,
         body: options?.body,
-        credentials: options?.credentials ?? "include",
+        credentials: options?.credentials ?? defaultCredentials,
         ...options?.adapterInit,
       };
 
