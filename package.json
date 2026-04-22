@@ -1,5 +1,5 @@
 {
-  "name": "@trieoh/node-fetch-sdk",
+  "name": "@soramux/node-fetch-sdk",
   "version": "0.1.5",
   "type": "module",
   "exports": {
