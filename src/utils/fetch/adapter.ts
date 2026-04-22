@@ -1,6 +1,7 @@
 import type { DefaultFailureEnvelope, DefaultSuccessEnvelope } from "./envelopes";
 import type { FetchClient } from "./client";
-import type { TimeoutError } from "./timeout";
+import { TimeoutError } from "./timeout";
+import classifyNetworkError from "./error-classifier";
 
 // ─── FetchAdapter ─────────────────────────────────────────────────────────────
 
@@ -78,17 +79,14 @@ export function defaultToFailure(raw: unknown, status: number): DefaultFailureEn
  * @param error - The caught exception.
  */
 export function defaultOnNetworkError(error: unknown): DefaultFailureEnvelope {
-  const message =
-    error instanceof Error ? error.message : "A network or unknown error occurred.";
-  const trace =
-    error instanceof Error ? [error.stack ?? message] : [String(error)];
+  const classified = classifyNetworkError(error);
 
   return {
     module: "Network",
-    message,
+    message: classified.message,
     timestamp: new Date().toISOString(),
-    code: 503,
-    error_id: "CLIENT_NETWORK_ERROR",
-    trace,
+    code: classified.code,
+    error_id: classified.errorId,
+    trace: classified.trace,
   };
 }
